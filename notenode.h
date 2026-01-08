@@ -16,25 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick
-import QtQuick.Controls
+#ifndef NOTENODE_H
+#define NOTENODE_H
 
-SplitView {
-    id: root
-    anchors.fill: parent
+#include "filenode.h"
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
+class NoteNode : public FileNode {
+public:
+  explicit NoteNode(QString name, QString content,
+                    FileSystemNode *parent = nullptr);
+  NodeType getType() const override;
 
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
-        }
-    }
+  QString content() const;
+  void setContent(const QString &content);
 
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
-    }
-}
+private:
+  QString m_content;
+};
+
+#endif // NOTENODE_H

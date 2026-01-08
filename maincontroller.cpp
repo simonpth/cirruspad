@@ -16,25 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick
-import QtQuick.Controls
+#include "maincontroller.h"
 
-SplitView {
-    id: root
-    anchors.fill: parent
+MainController::MainController(QObject *parent) : QObject(parent) {
+  m_fileSystemModel = std::make_unique<FileSystemModel>(this);
+}
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
-
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
-        }
-    }
-
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
-    }
+FileSystemModel *MainController::fileSystemModel() const {
+  return m_fileSystemModel.get();
 }

@@ -18,6 +18,20 @@ qt_add_qml_module(appcirruspad
     QML_FILES
         Main.qml
         Dashboard.qml
+        NoteView.qml
+        TodoView.qml
+        Sidebar.qml
+        WorkspaceLoader.qml
+
+    SOURCES
+        filesystemnode.h filesystemnode.cpp
+        foldernode.h foldernode.cpp
+        filenode.h
+        notenode.h notenode.cpp
+        todonode.h todonode.cpp
+        filesystemmodel.h filesystemmodel.cpp
+        maincontroller.h maincontroller.cpp
+
 )
 
 set_target_properties(appcirruspad PROPERTIES

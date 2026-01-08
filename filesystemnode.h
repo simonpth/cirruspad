@@ -16,25 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick
-import QtQuick.Controls
+#ifndef FILESYSTEMNODE_H
+#define FILESYSTEMNODE_H
 
-SplitView {
-    id: root
-    anchors.fill: parent
+#include <QString>
+#include <QVariant>
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
+class FileSystemNode {
+public:
+  explicit FileSystemNode(QString name, FileSystemNode *parent = nullptr);
+  virtual ~FileSystemNode() = default;
 
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
-        }
-    }
+  // Read API
+  virtual FileSystemNode *child(int row);
+  virtual int childCount() const;
+  virtual int columnCount() const;
+  virtual int row() const;
 
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
-    }
-}
+  FileSystemNode *parentItem();
+  QString name() const;
+  void setName(const QString &name);
+
+  enum NodeType { TypeFolder, TypeNote, TypeTodo };
+
+  virtual NodeType getType() const = 0;
+
+protected:
+  QString m_name;
+  FileSystemNode *m_parentItem;
+};
+
+#endif // FILESYSTEMNODE_H

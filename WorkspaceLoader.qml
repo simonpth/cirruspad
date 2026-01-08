@@ -17,24 +17,34 @@
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick
-import QtQuick.Controls
+import cirruspad
 
-SplitView {
+Item {
     id: root
-    anchors.fill: parent
+    property var currentIndex // QModelIndex
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
+    Loader {
+        id: contentLoader
+        anchors.fill: parent
+        source: {
+            if (!root.currentIndex || !root.currentIndex.valid)
+                return "";
 
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
+            var itemType = MainController.fileSystemModel.data(root.currentIndex, FileSystemModel.TypeRole);
+
+            if (itemType === "Note")
+                return "NoteView.qml";
+            if (itemType === "Todo")
+                return "TodoView.qml";
+            return "";
         }
     }
 
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
+    // Binding content to the loaded item
+    Binding {
+        target: contentLoader.item
+        property: "modelIndex"
+        value: root.currentIndex
+        when: contentLoader.status === Loader.Ready
     }
 }

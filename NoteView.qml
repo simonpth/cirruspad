@@ -18,23 +18,26 @@
 */
 import QtQuick
 import QtQuick.Controls
+import cirruspad
 
-SplitView {
+Item {
     id: root
-    anchors.fill: parent
+    property var modelIndex
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
+    TextArea {
+        id: textArea
+        anchors.fill: parent
+        anchors.margins: 10
+        // We bind the text to the model's ContentRole
+        // Since we can't easily two-way bind to a model function result without a proxy,
+        // we'll fetch on change and save on change.
 
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
+        text: root.modelIndex && root.modelIndex.valid ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.ContentRole) : ""
+
+        // Save changes back to model?
+        // We need a setData implementation C++ side for ContentRole
+        onEditingFinished: {
+            MainController.fileSystemModel.setData(root.modelIndex, text, FileSystemModel.ContentRole);
         }
-    }
-
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
     }
 }

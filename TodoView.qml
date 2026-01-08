@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 /*
     Copyright 2026, Simon Thal
 
@@ -18,23 +19,26 @@
 */
 import QtQuick
 import QtQuick.Controls
+import cirruspad
 
-SplitView {
+Item {
     id: root
-    anchors.fill: parent
+    property var modelIndex
 
-    Sidebar {
-        SplitView.preferredWidth: 250
-        SplitView.minimumWidth: 150
-        SplitView.maximumWidth: 400
+    ListView {
+        anchors.fill: parent
+        anchors.margins: 10
+        model: root.modelIndex && root.modelIndex.valid ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.TodosRole) : []
 
-        onFileSelected: function (index) {
-            workspace.currentIndex = index;
+        delegate: CheckBox {
+            required property var modelData
+
+            width: ListView.view.width
+            text: modelData.text
+            checked: modelData.checked
+            onToggled: {
+                MainController.fileSystemModel.setTodoChecked(root.modelIndex, modelData.index, checked);
+            }
         }
-    }
-
-    WorkspaceLoader {
-        id: workspace
-        SplitView.fillWidth: true
     }
 }
