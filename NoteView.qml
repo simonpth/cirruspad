@@ -28,16 +28,14 @@ Item {
         id: textArea
         anchors.fill: parent
         anchors.margins: 10
-        // We bind the text to the model's ContentRole
-        // Since we can't easily two-way bind to a model function result without a proxy,
-        // we'll fetch on change and save on change.
 
-        text: root.modelIndex && root.modelIndex.valid ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.ContentRole) : ""
-
-        // Save changes back to model?
-        // We need a setData implementation C++ side for ContentRole
-        onEditingFinished: {
-            MainController.fileSystemModel.setData(root.modelIndex, text, FileSystemModel.ContentRole);
+        onTextChanged: {
+            MainController.fileSystemModel.setData(root.modelIndex, textArea.text, FileSystemModel.ContentRole);
         }
+    }
+
+    onModelIndexChanged: {
+        var content = root.modelIndex ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.ContentRole) : "";
+        textArea.text = content || "";
     }
 }
