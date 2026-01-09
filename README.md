@@ -1,3 +1,7 @@
+# Work in Progress
+
+This project is currently in active development and is not yet ready for release. We are working hard to bring you a feature-rich and user-friendly note-taking application.
+
 # CirrusPad
 
 ![CirrusPad Banner](assets/banner.png)
@@ -11,10 +15,6 @@
 - ✅ **Task Management**: Robust to-do lists to maintain peak productivity.
 - 📂 **Structured Organization**: Deeply nested folders for comprehensive information management.
 - 💻 **Modern UI**: A responsive and high-performance interface built with Qt Quick.
-
-## Work in Progress
-
-This project is currently in active development and is not yet ready for release. We are working hard to bring you a feature-rich and user-friendly note-taking application.
 
 ## Architecture
 
