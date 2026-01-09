@@ -23,6 +23,7 @@ qt_add_qml_module(appcirruspad
         Sidebar.qml
         WorkspaceLoader.qml
         CreateItemDialog.qml
+        RenameDialog.qml
     RESOURCES
         assets/icons/folder.svg
         assets/icons/note.svg

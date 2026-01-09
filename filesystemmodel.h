@@ -67,6 +67,7 @@ public:
                                const QString &name);
 
   Q_INVOKABLE bool renameItem(const QModelIndex &index, const QString &newName);
+  Q_INVOKABLE bool deleteItem(const QModelIndex &index);
   Q_INVOKABLE void setTodoChecked(const QModelIndex &index, int todoIndex,
                                   bool checked);
   Q_INVOKABLE QModelIndex rootIndex() const { return QModelIndex(); }

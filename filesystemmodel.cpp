@@ -239,3 +239,29 @@ bool FileSystemModel::renameItem(const QModelIndex &index,
                                  const QString &newName) {
   return setData(index, newName, NameRole);
 }
+
+bool FileSystemModel::deleteItem(const QModelIndex &index) {
+  if (!index.isValid())
+    return false;
+
+  FileSystemNode *item = getItem(index);
+  if (!item || item == m_rootItem.get())
+    return false; // Cannot delete root
+
+  FileSystemNode *parentNode = item->parentItem();
+  if (!parentNode)
+    return false;
+
+  auto *parentFolder = dynamic_cast<FolderNode *>(parentNode);
+  if (!parentFolder)
+    return false;
+
+  int row = item->row();
+  QModelIndex parentIndex = parent(index);
+
+  beginRemoveRows(parentIndex, row, row);
+  parentFolder->removeChild(row);
+  endRemoveRows();
+
+  return true;
+}

@@ -28,6 +28,7 @@ Dialog {
     anchors.centerIn: Overlay.overlay
     width: 300
     height: 250
+    popupType: Dialog.Native
 
     required property var parentIndex
 
@@ -75,46 +76,71 @@ Dialog {
         currentIndex: 0
 
         // Step 1: Type Selection
-        ColumnLayout {
+        GridLayout {
+            rows: 3
+            columns: 2
             Label {
                 text: "What would you like to create?"
                 font.bold: true
                 Layout.alignment: Qt.AlignHCenter
+                Layout.row: 0
+                Layout.columnSpan: 2
             }
 
             Button {
                 text: "Folder"
                 icon.source: "assets/icons/folder.svg"
+                icon.color: palette.active.text
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.row: 1
+                Layout.column: 0
                 onClicked: {
                     root.selectedType = "Folder";
                     stackLayout.currentIndex = 2; // Skip to name
                 }
             }
+
             Button {
                 text: "File"
+                icon.source: "assets/icons/note.svg"
+                icon.color: palette.active.text
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.row: 1
+                Layout.column: 1
                 onClicked: {
                     root.selectedType = "File";
                     stackLayout.currentIndex = 1; // Go to file type selection
                 }
             }
+
             Item {
-                Layout.fillHeight: true
+                Layout.preferredHeight: 20
+                Layout.row: 2
+                Layout.columnSpan: 2
             } // Spacer
         }
 
         // Step 2: File Type Selection
-        ColumnLayout {
+        GridLayout {
+            rows: 4
+            columns: 2
             Label {
                 text: "Select file type:"
                 font.bold: true
                 Layout.alignment: Qt.AlignHCenter
+                Layout.row: 0
+                Layout.columnSpan: 2
             }
             Button {
                 text: "Note"
                 icon.source: "assets/icons/note.svg"
+                icon.color: palette.active.text
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.row: 1
+                Layout.column: 0
                 onClicked: {
                     root.selectedFileType = "Note";
                     stackLayout.currentIndex = 2; // Go to name
@@ -123,7 +149,11 @@ Dialog {
             Button {
                 text: "Todo List"
                 icon.source: "assets/icons/todo.svg"
+                icon.color: palette.active.text
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.row: 1
+                Layout.column: 1
                 onClicked: {
                     root.selectedFileType = "Todo";
                     stackLayout.currentIndex = 2; // Go to name
@@ -132,25 +162,35 @@ Dialog {
 
             Button {
                 text: "Back"
-                flat: true
+                //flat: true
+                Layout.row: 2
+                Layout.columnSpan: 2
                 onClicked: stackLayout.currentIndex = 0
             }
             Item {
                 Layout.fillHeight: true
+                Layout.row: 3
+                Layout.columnSpan: 2
             }
         }
 
         // Step 3: Name Input
-        ColumnLayout {
+        GridLayout {
+            rows: 4
+            columns: 1
             Label {
                 text: "Enter name:"
                 font.bold: true
                 Layout.alignment: Qt.AlignHCenter
+                Layout.row: 0
             }
 
             TextField {
                 id: nameField
                 Layout.fillWidth: true
+                Layout.row: 1
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
                 placeholderText: "Name..."
                 focus: true
                 onAccepted: {
@@ -161,7 +201,8 @@ Dialog {
 
             Button {
                 text: "Back"
-                flat: true
+                //flat: true
+                Layout.row: 2
                 onClicked: {
                     if (root.selectedType === "Folder") {
                         stackLayout.currentIndex = 0;
@@ -172,6 +213,7 @@ Dialog {
             }
             Item {
                 Layout.fillHeight: true
+                Layout.row: 3
             }
         }
     }

@@ -35,13 +35,14 @@ Item {
         rootIndex: helper.currentRootIndex
 
         delegate: ItemDelegate {
+            id: itemDelegate
             required property var model
             required property int index
 
             width: root.width
             text: model.name
             icon.source: model.isFolder ? "assets/icons/folder.svg" : (model.type === "Note" ? "assets/icons/note.svg" : "assets/icons/todo.svg")
-            //icon.color: "transparent" // Keep original SVG colors if any, or let it be colored by theme
+            icon.color: palette.active.text
 
             onClicked: {
                 if (model.isFolder) {
@@ -50,6 +51,36 @@ Item {
                 } else {
                     // Open file
                     root.fileSelected(visualModel.modelIndex(index));
+                }
+            }
+
+            // Right-click context menu
+            TapHandler {
+                acceptedButtons: Qt.RightButton
+                onTapped: {
+                    contextMenu.popup();
+                }
+            }
+
+            Menu {
+                id: contextMenu
+
+                MenuItem {
+                    text: "Rename"
+                    onTriggered: {
+                        renameDialog.currentName = itemDelegate.model.name;
+                        renameDialog.targetIndex = visualModel.modelIndex(itemDelegate.index);
+                        renameDialog.open();
+                    }
+                }
+
+                MenuItem {
+                    text: "Delete"
+                    onTriggered: {
+                        deleteConfirmDialog.itemName = itemDelegate.model.name;
+                        deleteConfirmDialog.targetIndex = visualModel.modelIndex(itemDelegate.index);
+                        deleteConfirmDialog.open();
+                    }
                 }
             }
         }
@@ -98,5 +129,29 @@ Item {
     CreateItemDialog {
         id: createItemDialog
         parentIndex: helper.currentRootIndex
+    }
+
+    RenameDialog {
+        id: renameDialog
+    }
+
+    Dialog {
+        id: deleteConfirmDialog
+        property string itemName: ""
+        property var targetIndex: null
+
+        title: "Confirm Delete"
+        modal: true
+        standardButtons: Dialog.Yes | Dialog.No
+
+        Label {
+            text: "Are you sure you want to delete \"" + deleteConfirmDialog.itemName + "\"?"
+        }
+
+        onAccepted: {
+            if (deleteConfirmDialog.targetIndex) {
+                MainController.fileSystemModel.deleteItem(deleteConfirmDialog.targetIndex);
+            }
+        }
     }
 }
