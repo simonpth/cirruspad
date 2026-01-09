@@ -38,9 +38,10 @@ Item {
             required property var model
             required property int index
 
-            width: parent.width
+            width: root.width
             text: model.name
-            icon.name: model.isFolder ? "folder" : (model.type === "Note" ? "text-x-generic" : "checkbox")
+            icon.source: model.isFolder ? "assets/icons/folder.svg" : (model.type === "Note" ? "assets/icons/note.svg" : "assets/icons/todo.svg")
+            //icon.color: "transparent" // Keep original SVG colors if any, or let it be colored by theme
 
             onClicked: {
                 if (model.isFolder) {
@@ -61,13 +62,14 @@ Item {
         // Note: The model's generic "invalid" index usually represents the abstract root.
     }
 
-    ColumnLayout {
+    ListView {
         anchors.fill: parent
+        model: visualModel
+        clip: true
 
-        // Header / Up Button
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.margins: 5
+        header: RowLayout {
+            width: parent.width
+            spacing: 5
 
             Button {
                 text: "Back"
@@ -87,17 +89,14 @@ Item {
             Button {
                 text: "+"
                 onClicked: {
-                    // MVP: Just add a folder for testing
-                    MainController.fileSystemModel.addFolder(helper.currentRootIndex, "New Folder");
+                    createItemDialog.open();
                 }
             }
         }
+    }
 
-        ListView {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            clip: true
-            model: visualModel
-        }
+    CreateItemDialog {
+        id: createItemDialog
+        parentIndex: helper.currentRootIndex
     }
 }

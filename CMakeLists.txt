@@ -22,6 +22,11 @@ qt_add_qml_module(appcirruspad
         TodoView.qml
         Sidebar.qml
         WorkspaceLoader.qml
+        CreateItemDialog.qml
+    RESOURCES
+        assets/icons/folder.svg
+        assets/icons/note.svg
+        assets/icons/todo.svg
 
     SOURCES
         filesystemnode.h filesystemnode.cpp
