@@ -38,10 +38,28 @@ Page {
         Repeater {
             model: root.openFiles.length
             delegate: TabButton {
+                id: tabButton
                 required property int index
-                text: root.openFiles[index].fileName
+                text: root.openFiles[index] ? root.openFiles[index].fileName : ""
                 onClicked: stackLayout.currentIndex = index
                 checked: stackLayout.currentIndex === index
+
+                Button {
+                    id: closeButton
+                    icon.source: "assets/icons/close.svg"
+                    icon.color: palette.active.text
+                    display: AbstractButton.IconOnly
+                    flat: true
+                    visible: tabButton.checked
+                    onClicked: root.closeFile(root.openFiles[tabButton.index])
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 0
+
+                    width: height
+                }
             }
         }
     }

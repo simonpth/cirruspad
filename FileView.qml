@@ -6,8 +6,8 @@ Item {
     id: root
 
     required property var file
-    property string fileName: file.fileName
-    property string filePath: file.filePath
+    property string fileName: file ? file.fileName : ""
+    property string filePath: file ? file.filePath : ""
 
     Loader {
         id: contentLoader
@@ -26,14 +26,14 @@ Item {
     Component {
         id: noteViewComponent
         NoteView {
-            noteFile: root.file
+            noteFile: root.file || null
         }
     }
 
     Component {
         id: todoViewComponent
         TodoView {
-            todoFile: root.file
+            todoFile: root.file || null
         }
     }
 }

@@ -30,11 +30,13 @@ Item {
         anchors.margins: 10
 
         onTextChanged: {
-            root.noteFile.content = textArea.text;
+            if (root.noteFile) {
+                root.noteFile.content = textArea.text;
+            }
         }
     }
 
     onNoteFileChanged: {
-        textArea.text = noteFile.content;
+        textArea.text = root.noteFile ? root.noteFile.content : "";
     }
 }

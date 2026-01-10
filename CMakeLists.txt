@@ -32,6 +32,7 @@ qt_add_qml_module(appcirruspad
         assets/icons/todo.svg
         assets/icons/trash.svg
         assets/icons/checkmark.svg
+        assets/icons/close.svg
 
     SOURCES
         filesystemnode.h filesystemnode.cpp
