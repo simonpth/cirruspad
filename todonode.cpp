@@ -17,52 +17,23 @@
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
 #include "todonode.h"
+#include "filesystemnode.h"
 
-TodoNode::TodoNode(QString name, FileSystemNode *parent)
-    : FileNode(std::move(name), parent) {}
+TodoNode::TodoNode(QString name, FolderNode *parent) : FileNode("", parent) {
+  m_todofile = std::make_unique<TodoFile>(name);
+  m_todofile->setFilePath(FileSystemNode::getPathFromNode(this));
+}
+
+TodoNode::TodoNode(std::unique_ptr<TodoFile> todoFile, FolderNode *parent)
+    : FileNode("", parent), m_todofile(std::move(todoFile)) {
+  m_todofile->setFilePath(FileSystemNode::getPathFromNode(this));
+}
+
+TodoNode::~TodoNode() = default;
 
 FileSystemNode::NodeType TodoNode::getType() const { return TypeTodo; }
 
-void TodoNode::addTodo(const QString &text, bool checked) {
-  m_todos.push_back({text, checked});
-}
+TodoFile *TodoNode::todoFile() const { return m_todofile.get(); }
 
-void TodoNode::insertTodo(int pos, const QString &text, bool checked) {
-  if (pos < 0 || pos > static_cast<int>(m_todos.size()))
-    pos = static_cast<int>(m_todos.size());
-  m_todos.insert(m_todos.begin() + pos, {text, checked});
-}
-
-void TodoNode::removeTodo(int index) {
-  if (index >= 0 && index < static_cast<int>(m_todos.size())) {
-    m_todos.erase(m_todos.begin() + index);
-  }
-}
-
-bool TodoNode::moveTodo(int from, int to) {
-  if (from < 0 || from >= static_cast<int>(m_todos.size()) || to < 0 ||
-      to >= static_cast<int>(m_todos.size()))
-    return false;
-
-  if (from == to)
-    return true;
-
-  auto val = m_todos[from];
-  m_todos.erase(m_todos.begin() + from);
-  m_todos.insert(m_todos.begin() + to, val);
-  return true;
-}
-
-void TodoNode::setTodoText(int index, const QString &text) {
-  if (index >= 0 && index < static_cast<int>(m_todos.size())) {
-    m_todos[index].text = text;
-  }
-}
-
-void TodoNode::setTodoChecked(int index, bool checked) {
-  if (index >= 0 && index < static_cast<int>(m_todos.size())) {
-    m_todos[index].checked = checked;
-  }
-}
-
-const std::vector<TodoEntry> &TodoNode::todos() const { return m_todos; }
+QString TodoNode::name() const { return m_todofile->fileName(); }
+void TodoNode::setName(const QString &name) { m_todofile->setFileName(name); }

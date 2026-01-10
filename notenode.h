@@ -20,18 +20,25 @@
 #define NOTENODE_H
 
 #include "filenode.h"
+#include "foldernode.h"
+#include "notefile.h"
 
 class NoteNode : public FileNode {
 public:
-  explicit NoteNode(QString name, QString content,
-                    FileSystemNode *parent = nullptr);
+  explicit NoteNode(QString name, FolderNode *parent = nullptr,
+                    QString content = "");
+  NoteNode(std::unique_ptr<NoteFile> noteFile, FolderNode *parent = nullptr);
+  ~NoteNode() override;
+
   NodeType getType() const override;
 
-  QString content() const;
-  void setContent(const QString &content);
+  NoteFile *noteFile() const;
+
+  QString name() const override;
+  void setName(const QString &name) override;
 
 private:
-  QString m_content;
+  std::unique_ptr<NoteFile> m_noteFile;
 };
 
 #endif // NOTENODE_H

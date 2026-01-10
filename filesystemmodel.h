@@ -38,15 +38,12 @@ public:
   enum TreeRoles {
     NameRole = Qt::DisplayRole,
     TypeRole = Qt::UserRole + 1,
-    ContentRole,
-    TodosRole,
+    ContentFileRole,
     IsFolderRole
   };
   Q_ENUM(TreeRoles)
 
   QVariant data(const QModelIndex &index, int role) const override;
-  bool setData(const QModelIndex &index, const QVariant &value,
-               int role = Qt::EditRole) override;
   Qt::ItemFlags flags(const QModelIndex &index) const override;
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const override;
@@ -68,8 +65,7 @@ public:
 
   Q_INVOKABLE bool renameItem(const QModelIndex &index, const QString &newName);
   Q_INVOKABLE bool deleteItem(const QModelIndex &index);
-  Q_INVOKABLE void setTodoChecked(const QModelIndex &index, int todoIndex,
-                                  bool checked);
+
   Q_INVOKABLE QModelIndex rootIndex() const { return QModelIndex(); }
 
 private:

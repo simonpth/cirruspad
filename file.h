@@ -16,28 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef TODONODE_H
-#define TODONODE_H
+#ifndef FILE_H
+#define FILE_H
 
-#include "filenode.h"
-#include "foldernode.h"
-#include "todofile.h"
+#include <QObject>
+#include <QString>
+#include <qqmlintegration.h>
 
-class TodoNode : public FileNode {
+class File : public QObject {
+  Q_OBJECT
+  QML_ELEMENT
+  Q_PROPERTY(
+      QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+  Q_PROPERTY(
+      QString filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
 public:
-  explicit TodoNode(QString name, FolderNode *parent = nullptr);
-  TodoNode(std::unique_ptr<TodoFile> todoFile, FolderNode *parent = nullptr);
-  ~TodoNode() override;
+  explicit File(QObject *parent = nullptr);
+  explicit File(QString name, QObject *parent = nullptr);
 
-  NodeType getType() const override;
+  QString fileName() const;
+  void setFileName(const QString &fileName);
 
-  TodoFile *todoFile() const;
+  QString filePath() const;
+  void setFilePath(const QString &filePath);
 
-  QString name() const override;
-  void setName(const QString &name) override;
+signals:
+  void fileNameChanged();
+  void filePathChanged();
 
 private:
-  std::unique_ptr<TodoFile> m_todofile;
+  QString m_fileName;
+  QString m_filePath;
 };
 
-#endif // TODONODE_H
+#endif // FILE_H

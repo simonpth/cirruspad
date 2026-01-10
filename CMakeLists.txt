@@ -21,9 +21,11 @@ qt_add_qml_module(appcirruspad
         NoteView.qml
         TodoView.qml
         Sidebar.qml
-        WorkspaceLoader.qml
         CreateItemDialog.qml
         RenameDialog.qml
+        Workspace.qml
+        FileView.qml
+
     RESOURCES
         assets/icons/folder.svg
         assets/icons/note.svg
@@ -37,7 +39,9 @@ qt_add_qml_module(appcirruspad
         todonode.h todonode.cpp
         filesystemmodel.h filesystemmodel.cpp
         maincontroller.h maincontroller.cpp
-
+        notefile.h notefile.cpp
+        todofile.h todofile.cpp
+        file.h file.cpp
 )
 
 set_target_properties(appcirruspad PROPERTIES

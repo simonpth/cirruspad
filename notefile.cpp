@@ -16,28 +16,18 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef TODONODE_H
-#define TODONODE_H
+#include "notefile.h"
 
-#include "filenode.h"
-#include "foldernode.h"
-#include "todofile.h"
+NoteFile::NoteFile(QObject *parent) : File{parent} {}
 
-class TodoNode : public FileNode {
-public:
-  explicit TodoNode(QString name, FolderNode *parent = nullptr);
-  TodoNode(std::unique_ptr<TodoFile> todoFile, FolderNode *parent = nullptr);
-  ~TodoNode() override;
+NoteFile::NoteFile(QString name, QObject *parent) : File{name, parent} {}
 
-  NodeType getType() const override;
+QString NoteFile::content() const { return m_content; }
 
-  TodoFile *todoFile() const;
-
-  QString name() const override;
-  void setName(const QString &name) override;
-
-private:
-  std::unique_ptr<TodoFile> m_todofile;
-};
-
-#endif // TODONODE_H
+void NoteFile::setContent(const QString &content) {
+  if (m_content == content) {
+    return;
+  }
+  m_content = content;
+  emit contentChanged();
+}

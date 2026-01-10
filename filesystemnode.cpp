@@ -45,3 +45,17 @@ FileSystemNode *FileSystemNode::parentItem() { return m_parentItem; }
 QString FileSystemNode::name() const { return m_name; }
 
 void FileSystemNode::setName(const QString &name) { m_name = name; }
+
+QString FileSystemNode::getPathFromNode(FileSystemNode *node) {
+  if (!node)
+    return QString();
+
+  QString path = "/";
+
+  while (node->parentItem() != nullptr) {
+    path.prepend("/" + node->name());
+    node = node->parentItem();
+  }
+
+  return path;
+}

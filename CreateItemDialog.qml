@@ -79,6 +79,7 @@ Dialog {
         GridLayout {
             rows: 3
             columns: 2
+            uniformCellWidths: true
             Label {
                 text: "What would you like to create?"
                 font.bold: true
@@ -93,6 +94,7 @@ Dialog {
                 icon.color: palette.active.text
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.maximumHeight: width
                 Layout.row: 1
                 Layout.column: 0
                 onClicked: {
@@ -107,6 +109,7 @@ Dialog {
                 icon.color: palette.active.text
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.maximumHeight: width
                 Layout.row: 1
                 Layout.column: 1
                 onClicked: {
@@ -116,16 +119,17 @@ Dialog {
             }
 
             Item {
-                Layout.preferredHeight: 20
+                Layout.fillHeight: true
                 Layout.row: 2
                 Layout.columnSpan: 2
-            } // Spacer
+            }
         }
 
         // Step 2: File Type Selection
         GridLayout {
             rows: 4
             columns: 2
+            uniformCellWidths: true
             Label {
                 text: "Select file type:"
                 font.bold: true
@@ -139,6 +143,7 @@ Dialog {
                 icon.color: palette.active.text
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.maximumHeight: width
                 Layout.row: 1
                 Layout.column: 0
                 onClicked: {
@@ -152,6 +157,7 @@ Dialog {
                 icon.color: palette.active.text
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.maximumHeight: width
                 Layout.row: 1
                 Layout.column: 1
                 onClicked: {
@@ -178,6 +184,7 @@ Dialog {
         GridLayout {
             rows: 4
             columns: 1
+            uniformCellWidths: true
             Label {
                 text: "Enter name:"
                 font.bold: true

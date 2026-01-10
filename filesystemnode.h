@@ -34,12 +34,14 @@ public:
   virtual int row() const;
 
   FileSystemNode *parentItem();
-  QString name() const;
-  void setName(const QString &name);
+  virtual QString name() const;
+  virtual void setName(const QString &name);
 
   enum NodeType { TypeFolder, TypeNote, TypeTodo };
 
   virtual NodeType getType() const = 0;
+
+  static QString getPathFromNode(FileSystemNode *node);
 
 protected:
   QString m_name;

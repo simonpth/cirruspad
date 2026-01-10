@@ -18,11 +18,23 @@
 */
 #include "notenode.h"
 
-NoteNode::NoteNode(QString name, QString content, FileSystemNode *parent)
-    : FileNode(std::move(name), parent), m_content(std::move(content)) {}
+NoteNode::NoteNode(QString name, FolderNode *parent, QString content)
+    : FileNode("", parent) {
+  m_noteFile = std::make_unique<NoteFile>(name);
+  m_noteFile->setContent(content);
+  m_noteFile->setFilePath(FileSystemNode::getPathFromNode(this));
+}
+
+NoteNode::NoteNode(std::unique_ptr<NoteFile> noteFile, FolderNode *parent)
+    : FileNode("", parent), m_noteFile(std::move(noteFile)) {
+  m_noteFile->setFilePath(FileSystemNode::getPathFromNode(this));
+}
+
+NoteNode::~NoteNode() = default;
 
 FileSystemNode::NodeType NoteNode::getType() const { return TypeNote; }
 
-QString NoteNode::content() const { return m_content; }
+NoteFile *NoteNode::noteFile() const { return m_noteFile.get(); }
 
-void NoteNode::setContent(const QString &content) { m_content = content; }
+QString NoteNode::name() const { return m_noteFile->fileName(); }
+void NoteNode::setName(const QString &name) { m_noteFile->setFileName(name); }

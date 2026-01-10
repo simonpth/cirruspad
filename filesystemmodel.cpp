@@ -19,6 +19,7 @@
 #include "filesystemmodel.h"
 #include "notenode.h"
 #include "todonode.h"
+#include <QtCore/qvariant.h>
 
 FileSystemModel::FileSystemModel(QObject *parent) : QAbstractItemModel(parent) {
   m_rootItem = std::make_unique<FolderNode>("Root");
@@ -26,7 +27,7 @@ FileSystemModel::FileSystemModel(QObject *parent) : QAbstractItemModel(parent) {
   // Add some dummy data
   auto notesFolder = std::make_unique<FolderNode>("My Notes", m_rootItem.get());
   notesFolder->appendChild(std::make_unique<NoteNode>(
-      "Welcome Note", "Welcome to CirrusPad!", notesFolder.get()));
+      "Welcome Note", notesFolder.get(), "Welcome to CirrusPad!"));
 
   auto todosFolder = std::make_unique<FolderNode>("Tasks", m_rootItem.get());
   todosFolder->appendChild(
@@ -67,21 +68,11 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const {
     break;
   case IsFolderRole:
     return item->getType() == FileSystemNode::TypeFolder;
-  case ContentRole:
+  case ContentFileRole:
     if (auto *note = dynamic_cast<NoteNode *>(item)) {
-      return note->content();
-    }
-    break;
-  case TodosRole:
-    if (auto *todo = dynamic_cast<TodoNode *>(item)) {
-      QVariantList list;
-      for (const auto &t : todo->todos()) {
-        QVariantMap entry;
-        entry["text"] = t.text;
-        entry["checked"] = t.checked;
-        list.append(entry);
-      }
-      return list;
+      return QVariant::fromValue(note->noteFile());
+    } else if (auto *todo = dynamic_cast<TodoNode *>(item)) {
+      return QVariant::fromValue(todo->todoFile());
     }
     break;
   }
@@ -141,8 +132,7 @@ QHash<int, QByteArray> FileSystemModel::roleNames() const {
   QHash<int, QByteArray> roles;
   roles[NameRole] = "name";
   roles[TypeRole] = "type";
-  roles[ContentRole] = "content";
-  roles[TodosRole] = "todos";
+  roles[ContentFileRole] = "file";
   roles[IsFolderRole] = "isFolder";
   return roles;
 }
@@ -177,7 +167,7 @@ void FileSystemModel::addNote(const QModelIndex &parentIndex,
     return;
 
   beginInsertRows(parentIndex, folder->childCount(), folder->childCount());
-  folder->appendChild(std::make_unique<NoteNode>(name, content, folder));
+  folder->appendChild(std::make_unique<NoteNode>(name, folder, content));
   endInsertRows();
 }
 
@@ -193,51 +183,15 @@ void FileSystemModel::addTodoList(const QModelIndex &parentIndex,
   endInsertRows();
 }
 
-bool FileSystemModel::setData(const QModelIndex &index, const QVariant &value,
-                              int role) {
-  if (!index.isValid())
-    return false;
-
+bool FileSystemModel::renameItem(const QModelIndex &index,
+                                 const QString &newName) {
   FileSystemNode *item = getItem(index);
   if (!item)
     return false;
 
-  bool changed = false;
-
-  switch (role) {
-  case NameRole:
-  case Qt::EditRole:
-    item->setName(value.toString());
-    changed = true;
-    break;
-  case ContentRole:
-    if (auto *note = dynamic_cast<NoteNode *>(item)) {
-      note->setContent(value.toString());
-      changed = true;
-    }
-    break;
-  }
-
-  if (changed) {
-    emit dataChanged(index, index, {role});
-    return true;
-  }
-  return false;
-}
-
-void FileSystemModel::setTodoChecked(const QModelIndex &index, int todoIndex,
-                                     bool checked) {
-  FileSystemNode *item = getItem(index);
-  if (auto *todo = dynamic_cast<TodoNode *>(item)) {
-    todo->setTodoChecked(todoIndex, checked);
-    // Emit dataChanged for TodosRole so the view updates
-    emit dataChanged(index, index, {TodosRole});
-  }
-}
-
-bool FileSystemModel::renameItem(const QModelIndex &index,
-                                 const QString &newName) {
-  return setData(index, newName, NameRole);
+  item->setName(newName);
+  emit dataChanged(index, index, {NameRole});
+  return true;
 }
 
 bool FileSystemModel::deleteItem(const QModelIndex &index) {

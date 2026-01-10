@@ -18,6 +18,7 @@
 */
 import QtQuick
 import QtQuick.Controls
+import cirruspad
 
 SplitView {
     id: root
@@ -29,11 +30,11 @@ SplitView {
         SplitView.maximumWidth: 400
 
         onFileSelected: function (index) {
-            workspace.currentIndex = index;
+            workspace.openFile(index);
         }
     }
 
-    WorkspaceLoader {
+    Workspace {
         id: workspace
         SplitView.fillWidth: true
     }

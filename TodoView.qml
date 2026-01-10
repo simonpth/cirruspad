@@ -23,21 +23,22 @@ import cirruspad
 
 Item {
     id: root
-    property var modelIndex
+    property TodoFile todoFile
 
     ListView {
         anchors.fill: parent
         anchors.margins: 10
-        model: root.modelIndex && root.modelIndex.valid ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.TodosRole) : []
+        model: root.todoFile ? root.todoFile.todos : []
 
         delegate: CheckBox {
             required property var modelData
+            required property int index
 
             width: ListView.view.width
             text: modelData.text
             checked: modelData.checked
             onToggled: {
-                MainController.fileSystemModel.setTodoChecked(root.modelIndex, modelData.index, checked);
+                root.todoFile.setTodoChecked(index, checked);
             }
         }
     }

@@ -22,7 +22,7 @@ import cirruspad
 
 Item {
     id: root
-    property var modelIndex
+    property NoteFile noteFile
 
     TextArea {
         id: textArea
@@ -30,12 +30,11 @@ Item {
         anchors.margins: 10
 
         onTextChanged: {
-            MainController.fileSystemModel.setData(root.modelIndex, textArea.text, FileSystemModel.ContentRole);
+            root.noteFile.content = textArea.text;
         }
     }
 
-    onModelIndexChanged: {
-        var content = root.modelIndex ? MainController.fileSystemModel.data(root.modelIndex, FileSystemModel.ContentRole) : "";
-        textArea.text = content || "";
+    onNoteFileChanged: {
+        textArea.text = noteFile.content;
     }
 }
