@@ -47,6 +47,7 @@ public:
 
   Q_INVOKABLE void setTodoText(int index, const QString &text);
   Q_INVOKABLE void setTodoChecked(int index, bool checked);
+  Q_INVOKABLE void deleteCheckedTodos();
 
   const std::vector<TodoEntry> &todos() const;
   const QVariantList todosVariantList() const;

@@ -70,11 +70,30 @@ void TodoFile::setTodoChecked(int index, bool checked) {
   }
 }
 
+void TodoFile::deleteCheckedTodos() {
+  bool changed = false;
+  for (auto it = m_todos.begin(); it != m_todos.end();) {
+    if (it->checked) {
+      it = m_todos.erase(it);
+      changed = true;
+    } else {
+      ++it;
+    }
+  }
+  if (changed) {
+    emit todosChanged();
+  }
+}
+
 const std::vector<TodoEntry> &TodoFile::todos() const { return m_todos; }
 
 const QVariantList TodoFile::todosVariantList() const {
   QVariantList list;
-  for (const auto &todo : m_todos)
-    list << QVariant::fromValue(todo);
+  for (const auto &todo : m_todos) {
+    QVariantMap map;
+    map["text"] = todo.text;
+    map["checked"] = todo.checked;
+    list << map;
+  }
   return list;
 }
