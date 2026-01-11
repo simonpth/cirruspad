@@ -25,7 +25,7 @@ SplitView {
     anchors.fill: parent
 
     Sidebar {
-        SplitView.preferredWidth: root.width * 0.2
+        SplitView.preferredWidth: Math.max(root.width * 0.2, 200)
         SplitView.minimumWidth: 150
         SplitView.maximumWidth: 400
 

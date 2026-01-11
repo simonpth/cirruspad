@@ -29,9 +29,8 @@ Dialog {
 
     title: "Rename Item"
     modal: true
-    standardButtons: Dialog.Ok | Dialog.Cancel
     anchors.centerIn: Overlay.overlay
-    popupType: Dialog.Native
+    popupType: Dialog.Item
 
     onAboutToShow: {
         nameField.text = currentName;
@@ -46,8 +45,12 @@ Dialog {
     }
 
     ColumnLayout {
+        id: mainLayout
         anchors.fill: parent
+        anchors.leftMargin: 6
+        anchors.rightMargin: 6
         spacing: 10
+        width: 300
 
         Label {
             text: "New name:"
@@ -62,6 +65,24 @@ Dialog {
                 if (text.trim() !== "") {
                     root.accept();
                 }
+            }
+        }
+
+        RowLayout {
+            spacing: 6
+            uniformCellSizes: true
+            Layout.fillWidth: true
+
+            Button {
+                Layout.fillWidth: true
+                text: "  Cancel  "
+                onClicked: root.reject()
+            }
+
+            Button {
+                Layout.fillWidth: true
+                text: "  OK  "
+                onClicked: root.accept()
             }
         }
     }

@@ -143,6 +143,8 @@ Item {
         title: "Confirm Delete"
         modal: true
         standardButtons: Dialog.Yes | Dialog.No
+        anchors.centerIn: Overlay.overlay
+        popupType: Dialog.Item
 
         Label {
             text: "Are you sure you want to delete \"" + deleteConfirmDialog.itemName + "\"?"

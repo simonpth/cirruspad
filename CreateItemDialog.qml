@@ -28,7 +28,8 @@ Dialog {
     anchors.centerIn: Overlay.overlay
     width: 300
     height: 250
-    popupType: Dialog.Native
+
+    popupType: Dialog.Item
 
     required property var parentIndex
 
@@ -73,6 +74,7 @@ Dialog {
     StackLayout {
         id: stackLayout
         anchors.fill: parent
+        anchors.margins: 8
         currentIndex: 0
 
         // Step 1: Type Selection

@@ -19,8 +19,6 @@ echo "Deploying WebAssembly files from $SOURCE_DIR to $TARGET_DIR..."
 FILES_TO_COPY=(
     "appcirruspad.js"
     "appcirruspad.wasm"
-    "qtloader.js"
-    "qtlogo.svg"
 )
 
 for file in "${FILES_TO_COPY[@]}"; do
@@ -31,13 +29,5 @@ for file in "${FILES_TO_COPY[@]}"; do
         echo "Warning: $file not found in $SOURCE_DIR"
     fi
 done
-
-# Copy and rename the HTML file
-if [ -f "$SOURCE_DIR/appcirruspad.html" ]; then
-    cp "$SOURCE_DIR/appcirruspad.html" "$TARGET_DIR/index.html"
-    echo "Copied and renamed appcirruspad.html to index.html"
-else
-    echo "Error: appcirruspad.html not found!"
-fi
 
 echo "Deployment complete."

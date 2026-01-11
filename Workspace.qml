@@ -25,9 +25,9 @@ Page {
 
     function closeFile(file) {
         if (openFiles.includes(file)) {
-            openFiles.splice(openFiles.indexOf(file));
+            openFiles.splice(openFiles.indexOf(file), 1);
             if (stackLayout.currentIndex > openFiles.length - 1) {
-                stackLayout.currentIndex = openFiles.length - 1;
+                stackLayout.currentIndex = Math.max(0, openFiles.length - 1);
             }
         }
     }
@@ -51,7 +51,9 @@ Page {
                     display: AbstractButton.IconOnly
                     flat: true
                     visible: tabButton.checked
-                    onClicked: root.closeFile(root.openFiles[tabButton.index])
+                    onClicked: {
+                        root.closeFile(root.openFiles[tabButton.index]);
+                    }
 
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
@@ -66,6 +68,7 @@ Page {
 
     contentItem: StackLayout {
         id: stackLayout
+        currentIndex: tabBar.currentIndex
 
         Repeater {
             model: root.openFiles.length
