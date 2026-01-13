@@ -41,7 +41,7 @@ Item {
 
             width: root.width
             text: model.name
-            icon.source: model.isFolder ? "assets/icons/folder.svg" : (model.type === "Note" ? "assets/icons/note.svg" : "assets/icons/todo.svg")
+            icon.source: model.isFolder ? "assets/icons/folder.svg" : (model.type === FileSystemTypes.Note ? "assets/icons/note.svg" : "assets/icons/todo.svg")
             icon.color: palette.active.text
 
             onClicked: {
@@ -98,29 +98,35 @@ Item {
         model: visualModel
         clip: true
 
-        header: RowLayout {
+        headerPositioning: ListView.OverlayHeader
+        header: ToolBar {
             width: parent.width
-            spacing: 5
+            height: 30
+            z: 5
+            RowLayout {
+                anchors.fill: parent
+                spacing: 5
 
-            Button {
-                text: "Back"
-                enabled: helper.currentRootIndex && helper.currentRootIndex.valid
-                onClicked: {
-                    helper.currentRootIndex = MainController.fileSystemModel.parent(helper.currentRootIndex);
+                Button {
+                    text: "Back"
+                    enabled: helper.currentRootIndex && helper.currentRootIndex.valid
+                    onClicked: {
+                        helper.currentRootIndex = MainController.fileSystemModel.parent(helper.currentRootIndex);
+                    }
                 }
-            }
 
-            Label {
-                text: (helper.currentRootIndex && helper.currentRootIndex.valid) ? MainController.fileSystemModel.data(helper.currentRootIndex, Qt.DisplayRole) : "Home"
-                Layout.fillWidth: true
-                elide: Text.ElideRight
-                font.bold: true
-            }
+                Label {
+                    text: (helper.currentRootIndex && helper.currentRootIndex.valid) ? MainController.fileSystemModel.data(helper.currentRootIndex, Qt.DisplayRole) : "Home"
+                    Layout.fillWidth: true
+                    elide: Text.ElideRight
+                    font.bold: true
+                }
 
-            Button {
-                text: "+"
-                onClicked: {
-                    createItemDialog.open();
+                Button {
+                    text: "+"
+                    onClicked: {
+                        createItemDialog.open();
+                    }
                 }
             }
         }

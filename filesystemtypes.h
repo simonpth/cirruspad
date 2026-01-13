@@ -16,27 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with CirrusPad. If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick
-import QtQuick.Controls
-import cirruspad
+#ifndef FILESYSTEMTYPES_H
+#define FILESYSTEMTYPES_H
 
-Item {
-    id: root
-    property NoteFile noteFile
+#include <QObject>
+#include <qqmlintegration.h>
 
-    TextArea {
-        id: textArea
-        anchors.fill: parent
-        anchors.margins: 10
+class FileSystemTypes : public QObject {
+  Q_OBJECT
+  QML_ELEMENT
+  QML_UNCREATABLE("only used for enum in qml")
 
-        onTextChanged: {
-            if (root.noteFile) {
-                root.noteFile.content = textArea.text;
-            }
-        }
-    }
+public:
+  enum NodeType { Folder, Note, Todo };
+  Q_ENUM(NodeType)
+};
 
-    onNoteFileChanged: {
-        textArea.text = root.noteFile ? root.noteFile.content ? root.noteFile.content : "" : "";
-    }
-}
+#endif // FILESYSTEMTYPES_H

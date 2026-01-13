@@ -30,7 +30,7 @@ public:
   NoteNode(std::unique_ptr<NoteFile> noteFile, FolderNode *parent = nullptr);
   ~NoteNode() override;
 
-  NodeType getType() const override;
+  FileSystemTypes::NodeType getType() const override;
 
   NoteFile *noteFile() const;
 

@@ -31,7 +31,9 @@ int FolderNode::childCount() const {
   return static_cast<int>(m_childItems.size());
 }
 
-FileSystemNode::NodeType FolderNode::getType() const { return TypeFolder; }
+FileSystemTypes::NodeType FolderNode::getType() const {
+  return FileSystemTypes::Folder;
+}
 
 void FolderNode::appendChild(std::unique_ptr<FileSystemNode> &&child) {
   m_childItems.push_back(std::move(child));

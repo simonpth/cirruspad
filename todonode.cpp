@@ -31,7 +31,9 @@ TodoNode::TodoNode(std::unique_ptr<TodoFile> todoFile, FolderNode *parent)
 
 TodoNode::~TodoNode() = default;
 
-FileSystemNode::NodeType TodoNode::getType() const { return TypeTodo; }
+FileSystemTypes::NodeType TodoNode::getType() const {
+  return FileSystemTypes::Todo;
+}
 
 TodoFile *TodoNode::todoFile() const { return m_todofile.get(); }
 

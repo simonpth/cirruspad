@@ -68,54 +68,49 @@ Item {
             }
         }
 
-        footer: Item {
-            width: todoList.width
-            height: footerLayout.implicitHeight + 5
-            visible: root.todoFile !== null
+        footerPositioning: ListView.InlineFooter
+        footer: RowLayout {
+            id: footerLayout
+            spacing: 5
+            height: newTodoInput.implicitHeight + 5
 
-            RowLayout {
-                id: footerLayout
-                anchors.fill: parent
-                anchors.topMargin: 5
-                anchors.rightMargin: 5
-                spacing: 5
+            CheckBox {
+                id: footerCheckbox
+                enabled: false
+                opacity: 0.3
+                Layout.alignment: Qt.AlignBottom
+            }
 
-                CheckBox {
-                    id: footerCheckbox
-                    enabled: false
-                    opacity: 0.3
-                }
-
-                TextField {
-                    id: newTodoInput
-                    Layout.fillWidth: true
-                    placeholderText: "Add a new todo..."
-                    background: null
-                    verticalAlignment: TextInput.AlignVCenter
-                    onAccepted: {
-                        if (text.trim() !== "") {
-                            root.todoFile.addTodo(text);
-                            text = "";
-                        }
+            TextField {
+                id: newTodoInput
+                Layout.fillWidth: true
+                placeholderText: "Add a new todo..."
+                background: null
+                verticalAlignment: TextInput.AlignVCenter
+                Layout.alignment: Qt.AlignBottom
+                onAccepted: {
+                    if (text.trim() !== "") {
+                        root.todoFile.addTodo(text);
+                        text = "";
                     }
                 }
+            }
 
-                Button {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: 40
-                    Layout.alignment: Qt.AlignCenter
-                    icon.source: "assets/icons/checkmark.svg"
-                    icon.color: palette.active.text
-                    display: AbstractButton.IconOnly
-                    flat: true
-                    visible: newTodoInput.text.trim() !== ""
-                    onClicked: newTodoInput.accepted()
-                }
+            ToolButton {
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+                Layout.alignment: Qt.AlignCenter
+                icon.source: "assets/icons/checkmark.svg"
+                icon.color: palette.active.text
+                display: AbstractButton.IconOnly
+                flat: true
+                visible: newTodoInput.text.trim() !== ""
+                onClicked: newTodoInput.accepted()
             }
         }
     }
 
-    Button {
+    ToolButton {
         id: deleteButton
         anchors.right: parent.right
         anchors.bottom: parent.bottom

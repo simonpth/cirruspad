@@ -32,7 +32,9 @@ NoteNode::NoteNode(std::unique_ptr<NoteFile> noteFile, FolderNode *parent)
 
 NoteNode::~NoteNode() = default;
 
-FileSystemNode::NodeType NoteNode::getType() const { return TypeNote; }
+FileSystemTypes::NodeType NoteNode::getType() const {
+  return FileSystemTypes::Note;
+}
 
 NoteFile *NoteNode::noteFile() const { return m_noteFile.get(); }
 

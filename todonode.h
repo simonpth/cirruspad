@@ -29,7 +29,7 @@ public:
   TodoNode(std::unique_ptr<TodoFile> todoFile, FolderNode *parent = nullptr);
   ~TodoNode() override;
 
-  NodeType getType() const override;
+  FileSystemTypes::NodeType getType() const override;
 
   TodoFile *todoFile() const;
 

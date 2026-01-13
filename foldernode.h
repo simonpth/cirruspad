@@ -30,7 +30,7 @@ public:
   // FileSystemNode Overrides
   FileSystemNode *child(int row) override;
   int childCount() const override;
-  NodeType getType() const override;
+  FileSystemTypes::NodeType getType() const override;
 
   // Folder Specific API
   void appendChild(std::unique_ptr<FileSystemNode> &&child);

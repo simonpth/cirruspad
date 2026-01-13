@@ -35,6 +35,7 @@ qt_add_qml_module(appcirruspad
         assets/icons/close.svg
 
     SOURCES
+        filesystemtypes.h
         filesystemnode.h filesystemnode.cpp
         foldernode.h foldernode.cpp
         filenode.h

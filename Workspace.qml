@@ -7,19 +7,20 @@ import cirruspad
 Page {
     id: root
 
+    topPadding: 0
+
+    //SETTINGS PROPERTY
+    property bool dragAndDropActive: true
+
     property list<var> openFiles
 
     function openFile(index) {
-        var itemType = MainController.fileSystemModel.data(index, FileSystemModel.TypeRole);
-        var file;
-        if (itemType === "Todo") {
-            file = MainController.fileSystemModel.data(index, FileSystemModel.ContentFileRole);
-        } else if (itemType === "Note") {
-            file = MainController.fileSystemModel.data(index, FileSystemModel.ContentFileRole);
-        }
-        if (!openFiles.includes(file)) {
+        var file = MainController.fileSystemModel.data(index, FileSystemModel.ContentFileRole);
+        if (file && !openFiles.includes(file)) {
             openFiles.push(file);
             stackLayout.currentIndex = openFiles.length - 1;
+        } else if (openFiles.includes(file)) {
+            stackLayout.currentIndex = openFiles.indexOf(file);
         }
     }
 
@@ -32,35 +33,142 @@ Page {
         }
     }
 
-    header: TabBar {
-        id: tabBar
+    //move function for js array
+    function moveFile(from, to) {
+        var item = openFiles[from];
+        openFiles.splice(from, 1);
 
-        Repeater {
-            model: root.openFiles.length
-            delegate: TabButton {
-                id: tabButton
-                required property int index
-                text: root.openFiles[index] ? root.openFiles[index].fileName : ""
-                onClicked: stackLayout.currentIndex = index
-                checked: stackLayout.currentIndex === index
+        if (to > from) {
+            to--;
+        }
 
-                Button {
-                    id: closeButton
-                    icon.source: "assets/icons/close.svg"
-                    icon.color: palette.active.text
-                    display: AbstractButton.IconOnly
-                    flat: true
-                    visible: tabButton.checked
-                    onClicked: {
-                        root.closeFile(root.openFiles[tabButton.index]);
+        openFiles.splice(to, 0, item);
+    }
+
+    header: ListView {
+        id: tabBarList
+        height: 30
+        orientation: ListView.Horizontal
+        width: parent.width
+
+        clip: true
+
+        interactive: true
+
+        model: root.openFiles
+        delegate: TabButton {
+            id: content
+
+            required property var modelData
+            required property int index
+
+            width: 150
+            height: 30
+
+            MouseArea {
+                id: dragHandler
+
+                property point hotSpot
+
+                anchors.fill: parent
+                drag.target: root.dragAndDropActive ? content : null
+
+                drag.axis: Drag.XAxis
+
+                onReleased: {
+                    if (content.Drag.target !== null) {
+                        var from = content.index;
+                        var to = from;
+                        if (content.Drag.target.targetIndex !== undefined) {
+                            to = content.Drag.target.targetIndex;
+                        }
+                        root.moveFile(from, to);
+                        stackLayout.currentIndex = to > from ? to - 1 : to;
+                    } else {
+                        root.moveFile(content.index, content.index);
+                        stackLayout.currentIndex = content.index;
                     }
+                }
 
+                onPressed: {
+                    hotSpot = Qt.point(mouseX, mouseY);
+                    stackLayout.currentIndex = content.index;
+                }
+            }
+
+            Drag.active: dragHandler.drag.active
+            Drag.source: content
+            Drag.hotSpot: dragHandler.hotSpot
+
+            background.opacity: dragHandler.drag.active ? 0.5 : 1.0
+
+            z: dragHandler.drag.active ? 3 : 2
+
+            text: modelData ? modelData.fileName : ""
+
+            checked: stackLayout.currentIndex === index
+
+            ToolButton {
+                id: closeButton
+                icon.source: "assets/icons/close.svg"
+                icon.color: palette.text
+                display: AbstractButton.IconOnly
+                flat: true
+                visible: stackLayout.currentIndex === content.index
+                onClicked: {
+                    root.closeFile(content.modelData);
+                }
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: 4
+                height: parent.height - 4
+                width: height
+            }
+
+            DropArea {
+                id: leftDropArea
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                width: parent.width / 2
+
+                property int targetIndex: content.index
+
+                Rectangle {
+                    anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    anchors.right: parent.right
-                    anchors.margins: 0
 
-                    width: height
+                    width: 4
+
+                    color: palette.active.text
+
+                    visible: leftDropArea.containsDrag
+                }
+            }
+
+            DropArea {
+                id: rightDropArea
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                width: parent.width / 2
+
+                property int targetIndex: content.index + 1
+
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+
+                    width: 4
+
+                    color: palette.active.text
+
+                    visible: rightDropArea.containsDrag
                 }
             }
         }
@@ -68,14 +176,14 @@ Page {
 
     contentItem: StackLayout {
         id: stackLayout
-        currentIndex: tabBar.currentIndex
+        // currentIndex managed via openFile and tabs
 
         Repeater {
-            model: root.openFiles.length
+            model: root.openFiles
             delegate: FileView {
                 id: fileView
-                required property var index
-                file: root.openFiles[index]
+                required property var modelData
+                file: modelData
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true

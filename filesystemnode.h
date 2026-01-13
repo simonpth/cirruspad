@@ -19,6 +19,7 @@
 #ifndef FILESYSTEMNODE_H
 #define FILESYSTEMNODE_H
 
+#include "filesystemtypes.h"
 #include <QString>
 #include <QVariant>
 
@@ -37,9 +38,7 @@ public:
   virtual QString name() const;
   virtual void setName(const QString &name);
 
-  enum NodeType { TypeFolder, TypeNote, TypeTodo };
-
-  virtual NodeType getType() const = 0;
+  virtual FileSystemTypes::NodeType getType() const = 0;
 
   static QString getPathFromNode(FileSystemNode *node);
 

@@ -57,17 +57,9 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const {
   case Qt::EditRole:
     return item->name();
   case TypeRole:
-    switch (item->getType()) {
-    case FileSystemNode::TypeFolder:
-      return "Folder";
-    case FileSystemNode::TypeNote:
-      return "Note";
-    case FileSystemNode::TypeTodo:
-      return "Todo";
-    }
-    break;
+    return QVariant::fromValue(item->getType());
   case IsFolderRole:
-    return item->getType() == FileSystemNode::TypeFolder;
+    return item->getType() == FileSystemTypes::Folder;
   case ContentFileRole:
     if (auto *note = dynamic_cast<NoteNode *>(item)) {
       return QVariant::fromValue(note->noteFile());
