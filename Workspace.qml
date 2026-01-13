@@ -62,7 +62,7 @@ Page {
             required property var modelData
             required property int index
 
-            width: 150
+            width: content.implicitWidth + closeButton.width + 25
             height: 30
 
             MouseArea {
