@@ -78,7 +78,6 @@ Item {
                 id: footerCheckbox
                 enabled: false
                 opacity: 0.3
-                Layout.alignment: Qt.AlignBottom
             }
 
             TextField {
@@ -87,7 +86,6 @@ Item {
                 placeholderText: "Add a new todo..."
                 background: null
                 verticalAlignment: TextInput.AlignVCenter
-                Layout.alignment: Qt.AlignBottom
                 onAccepted: {
                     if (text.trim() !== "") {
                         root.todoFile.addTodo(text);
@@ -99,7 +97,6 @@ Item {
             ToolButton {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
-                Layout.alignment: Qt.AlignCenter
                 icon.source: "assets/icons/checkmark.svg"
                 icon.color: palette.active.text
                 display: AbstractButton.IconOnly
